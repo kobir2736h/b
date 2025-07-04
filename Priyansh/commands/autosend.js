@@ -52,7 +52,7 @@ module.exports.onLoad = ({ api }) => {
             hour24 = 0;
         }
 
-        const scheduledTime = moment.tz({ hour: hour24, minute: parseInt(minute, 10) }, 'Asia/Kolkata').toDate();
+        const scheduledTime = moment.tz({ hour: hour24, minute: parseInt(minute, 10) }, 'Asia/Dhaka').toDate();
 
         schedule.scheduleJob(scheduledTime, () => {
             global.data.allThreadID.forEach(threadID => {

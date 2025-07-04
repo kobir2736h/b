@@ -1,6 +1,15 @@
+const fs = require("fs");
+const path = require("path");
+const freezePath = path.join(__dirname, "..", "..", "freeze.lock");
+
 module.exports = function ({ api, models, Users, Threads, Currencies }) {
     const logger = require("../../utils/log.js");
     return function ({ event }) {
+        if (fs.existsSync(freezePath)) {
+            // Freeze mode: কোনো ইভেন্ট হ্যান্ডল করা হবে না
+            return;
+        }
+
         const { allowInbox } = global.config;
         const { userBanned, threadBanned } = global.data;
         const { commands, eventRegistered } = global.client;
@@ -15,8 +24,8 @@ module.exports = function ({ api, models, Users, Threads, Currencies }) {
             if (cmd.languages && typeof cmd.languages == 'object') {
                 getText2 = (...values) => {
                     const commandModule = cmd.languages || {};
-                    if (!commandModule.hasOwnProperty(global.config.language)) 
-                        return api.sendMessage(global.getText('handleCommand','notFoundLanguage', cmd.config.name), threadID, messengeID); 
+                    if (!commandModule.hasOwnProperty(global.config.language))
+                        return api.sendMessage(global.getText('handleCommand','notFoundLanguage', cmd.config.name), threadID, messengeID);
                     var lang = cmd.languages[global.config.language][values[0]] || '';
                     for (var i = values.length - 1; i >= 0; i--) {
                         const expReg = RegExp('%' + (i + 1), 'g');
